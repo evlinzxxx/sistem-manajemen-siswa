@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Imports\SiswaImport;
 use App\Models\kelas;
 use App\Models\siswa;
-use App\Helpers\Fungsi;
 use App\Models\tapel;
-use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class adminsiswacontroller extends Controller
 {
@@ -58,7 +56,7 @@ class adminsiswacontroller extends Controller
             'no_induk' => 'required|size:10',
             'nama' => 'required|string|max:255',
             'tempat_lahir' => 'required|string|max:255',
-            'tgl_lahir' => 'required|date|before_or_equal:' . Carbon::now()->subYears(10)->format('Y-m-d') . '|after_or_equal:' . Carbon::now()->subYears(15)->format('Y-m-d'),
+            'tgl_lahir' => 'required|date|before_or_equal:' . Carbon::now()->subYears(10)->format('Y-m-d') . '|after_or_equal:' . Carbon::now()->subYears(18)->format('Y-m-d'),
             'alamat' => 'required|max:255',
             'no_hp' => 'required|numeric',
             'kelas' => 'exists:kelas,id',
@@ -106,7 +104,7 @@ class adminsiswacontroller extends Controller
             'no_induk' => 'required|size:10',
             'nama' => 'required|string|max:255',
             'tempat_lahir' => 'required|string|max:255',
-            'tgl_lahir' => 'required|date|before_or_equal:' . Carbon::now()->subYears(10)->format('Y-m-d') . '|after_or_equal:' . Carbon::now()->subYears(15)->format('Y-m-d'),
+            'tgl_lahir' => 'required|date|before_or_equal:' . Carbon::now()->subYears(10)->format('Y-m-d') . '|after_or_equal:' . Carbon::now()->subYears(18)->format('Y-m-d'),
             'alamat' => 'required|max:255',
             'wali' => 'required',
             'no_hp' => 'required|numeric',
@@ -216,5 +214,23 @@ class adminsiswacontroller extends Controller
 
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream($namaPdf . '.pdf');
+    }
+
+    public function import()
+    {
+        $pages = 'siswa';
+        return view('pages.admin.siswa.import', compact('pages'));
+    }
+
+
+    public function siswaImportExcel(Request $request)
+    {
+        $file = $request->file('file');
+        $namaFile = $file->getClientOriginalName();
+        $file->move('DataSiswa', $namaFile);
+
+        Excel::import(new SiswaImport, public_path('/DataSiswa/' . $namaFile));
+
+        return redirect()->route('siswa');
     }
 }

@@ -16,7 +16,7 @@ return [
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
     'after' => 'The :attribute must be a date after :date.',
-    'after_or_equal' => 'Umur maksimal 15 tahun.',
+    'after_or_equal' => 'Umur maksimal 18 tahun.',
     'alpha' => 'The :attribute must only contain letters.',
     'alpha_dash' => 'The :attribute must only contain letters, numbers, dashes and underscores.',
     'alpha_num' => 'The :attribute must only contain letters and numbers.',

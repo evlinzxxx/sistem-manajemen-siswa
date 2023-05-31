@@ -18,7 +18,6 @@ Siswa
     <div class="section-body">
         <div class="card">
             <div class="card-body">
-
                 <form action="{{ route('siswa.cari') }}" method="GET" class="d-inline">
                 <div class="d-flex bd-highlight mb-0 align-items-center">
 
@@ -41,6 +40,12 @@ Siswa
                         <i class="fas fa-print mr-2"></i> Cetak PDF</i>
                     </a>
                 </div>
+                <div class="d-flex bd-highlight mb-0 align-items-center">
+                    <div class="p-2 bd-highlight">
+                        <a class="btn btn-info px-4" href="{{ route('siswa.Import') }}"> <span class="pcoded-micon text-light"><i class="fas fa-file"></i> Import </a>   
+                        </div>                    
+                    </div>
+                    
 
                 <x-jsmultidel link="{{route('siswa.multidel')}}" />
 

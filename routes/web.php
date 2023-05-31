@@ -55,6 +55,8 @@ Route::group(['middleware' => ['auth:web', 'verified']], function () {
 
     //siswa
     Route::get('/admin/siswa', [adminsiswacontroller::class, 'index'])->name('siswa');
+    Route::get('/admin/siswa/import', [adminsiswacontroller::class, 'import'])->name('siswa.Import');
+    Route::post('/admin/siswa/importExcel', [adminsiswacontroller::class, 'siswaImportExcel'])->name('siswa.ImportExcel');
     Route::get('/admin/siswa/{id}', [adminsiswacontroller::class, 'edit'])->name('siswa.edit');
     Route::post('/admin/siswa/{id}/reset', [adminsiswacontroller::class, 'reset'])->name('siswa.reset');
     Route::put('/admin/siswa/{id}', [adminsiswacontroller::class, 'update'])->name('siswa.update');
