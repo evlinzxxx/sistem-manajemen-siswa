@@ -86,7 +86,7 @@ Beranda
                             <br><span><h4>Data siswa belum tersedia</h4></span>
                       </div>
                     <div class="card-body">
-                      <canvas id="myChart2"></canvas>
+                      <canvas id="container"></canvas>
                     </div>
                   </div>
                 </div>
@@ -102,7 +102,7 @@ Beranda
                           <br><span><h4>Per Tahun Ajaran</h4></span></h3>
                     </div>
                     <div class="card-body">
-                      <canvas id="myChart3"></canvas>
+                      <div id="container"></div>
                     </div>
                   </div>
                 </div>
@@ -112,47 +112,58 @@ Beranda
 
 @push('after-style')
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
-  $(document).ready(function() {
-    var ctx = document.getElementById('myChart3').getContext('2d');
-    
-    var labels = {!! json_encode($tahun_ajaran) !!};
-    var dataLk = {!! json_encode(array_values($dataSiswaPerTahunLk)) !!};
-    var dataPr = {!! json_encode(array_values($dataSiswaPerTahunPr)) !!};
-    
-    var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Jumlah Siswa Perempuan",
-            data: dataPr,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-          },
-          {
-            label: "Jumlah Siswa Laki-laki",
-            data: dataLk,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
+    $(document).ready(function () {
+        var labels = {!! json_encode($tahun_ajaran) !!};
+        var dataLk = {!! json_encode(array_values($dataSiswaPerTahunLk)) !!};
+        var dataPr = {!! json_encode(array_values($dataSiswaPerTahunPr)) !!};
+
+        var minValue = Math.min(...dataLk, ...dataPr); // Get the minimum value from the data
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Jumlah Siswa per Tahun Ajaran'
+            },
+            subtitle: {
+                text: 'Source: Your Data Source'
+            },
+            xAxis: {
+                categories: labels
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Jumlah Siswa'
+                }
+            },
+            tooltip: {
+                pointFormatter: function () {
+                    var seriesName = this.series.name;
+                    var dataValue = seriesName === 'Siswa' ? dataLk[this.x] : dataPr[this.x];
+                    return '<span style="color:' + this.color + '">\u25CF</span> ' + seriesName + ': ' + dataValue;
+                }
+            },
+            series: [{
+                name: 'Siswa',
+                data: dataLk,
+                color: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                name: 'Siswi',
+                data: dataPr,
+                color: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        });
     });
-  });
 </script>
-</script>
+
 
 @endpush
 @endif
